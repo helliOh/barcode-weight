@@ -1,6 +1,5 @@
 const SerialPort = require("serialport");
-const ks = require('node-key-sender');
-const fs = require('fs');
+const robot = require('robotjs');
 
 const port = new SerialPort("COM14", {
     baudRate: 9600
@@ -17,6 +16,10 @@ const STABLE_THRESHOLD = 4;
 
 const signalDebug = false;
 const timeDebug = true;
+
+/*
+    Avg. KB I/O time : 1000ms
+*/
 
 async function eventSerializer(){
     return new Promise(async (resolve, reject) =>{
@@ -54,11 +57,12 @@ async function eventSerializer(){
                         prev = curr, stable = 0, isStable = false, isSent = true;
                         let buf = `${String(curr)}`;
                         
+                        process.stdout.write('\x07');//Start I/O
                         if(timeDebug) console.time('I/O');
-                        await ks.sendText(buf);
+                        await robot.typeString(buf);
                         if(timeDebug) console.timeLog('I/O');
-                        await ks.sendKey('@9');
-                        process.stdout.write('\x07');
+                        await robot.keyTap('tab')
+                        process.stdout.write('\x07');//Ready to load another product
                         if(timeDebug) console.timeLog('I/O');
                         if(timeDebug) console.timeEnd('I/O');
                     }
@@ -87,12 +91,3 @@ async function mainThread(){
 }
 
 mainThread();
-
-// process.stdin.on('data', (chunk) =>{
-//     let data = chunk.toString('utf8').replace(/[\r\n]/g, '');
-    
-//     if(data == 'quit') process.exit();
-//     else{
-//         barcode = data;
-//     }
-// });
