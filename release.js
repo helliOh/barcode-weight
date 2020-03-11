@@ -25,7 +25,7 @@ async function eventSerializer(){
     return new Promise(async (resolve, reject) =>{
         port
         .on('open', async () =>{
-            process.stdout.write('\x07\x07\x07\x07\x07');
+            process.stdout.write('\x07\x07\x07\x07');
 
             port.on('data', async (data) =>{
                 data = data.toString('utf8').replace(/[wkg]/gi, '');
@@ -57,13 +57,13 @@ async function eventSerializer(){
                         prev = curr, stable = 0, isStable = false, isSent = true;
                         let buf = `${String(curr)}`;
                         
-                        process.stdout.write('\x07');//Start I/O
-                        if(timeDebug) console.time('I/O');
+                        process.stdout.write('\x07');//Beep sound with "please wait"
+                        if(timeDebug) console.time('I/O');//Start KB I/O
                         await robot.typeString(buf);
                         if(timeDebug) console.timeLog('I/O');
                         await robot.keyTap('tab')
-                        process.stdout.write('\x07');//Ready to load another product
-                        if(timeDebug) console.timeLog('I/O');
+                        process.stdout.write('\x07');//Beep sound with "good to go"
+                        if(timeDebug) console.timeLog('I/O');//End KB I/O
                         if(timeDebug) console.timeEnd('I/O');
                     }
                 }

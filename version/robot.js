@@ -25,7 +25,7 @@ async function eventSerializer(){
     return new Promise(async (resolve, reject) =>{
         port
         .on('open', async () =>{
-            process.stdout.write('\x07\x07\x07\x07');//Synchronized
+            process.stdout.write('\x07\x07\x07\x07');//Synchronized with 4 beep sound
 
             port.on('data', async (data) =>{
                 data = data.toString('utf8').replace(/[wkg]/gi, '');
